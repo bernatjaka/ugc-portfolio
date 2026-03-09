@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaka Bernat · UGC Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #0d0d0d;
+  --dark:    #141414;
+  --dark2:   #1c1c1c;
+  --dark3:   #242424;
+  --border:  #2e2e2e;
+  --white:   #f0ede8;
+  --muted:   #7a7570;
+  --accent:  #c8a97e;
+  --accent2: #e8c99a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  padding: 1rem 3.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(13,13,13,0.93);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 88vh;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  align-items: end;
+  padding: 74px 3.5rem 0;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.hero-left {
+  padding: 3.5rem 4rem 3.5rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.hero-eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.hero-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
+
+.hero-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 9vw, 8rem);
+  line-height: 0.93;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  margin-bottom: 2rem;
+}
+.hero-name .accent-line {
+  color: var(--accent);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.74em;
+}
+
+.hero-bio {
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--muted);
+  max-width: 480px;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  border-left: 2px solid var(--border);
+  padding-left: 1.4rem;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+.hero-tag-chip {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.85rem;
+  transition: all 0.3s;
+}
+.hero-tag-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: var(--accent);
+  color: var(--black);
+  padding: 0.95rem 2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.3s;
+  width: fit-content;
+}
+.hero-cta:hover { background: var(--accent2); transform: translateY(-2px); }
+
+/* HERO PHOTO */
+.hero-right {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.hero-photo-wrap {
+  width: 100%;
+  height: calc(88vh - 74px);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  filter: grayscale(10%) contrast(1.05);
+}
+
+/* bottom fade */
+.hero-photo-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 38%;
+  background: linear-gradient(to top, var(--black), transparent);
+  pointer-events: none;
+}
+
+.tiktok-float {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  background: var(--accent);
+  color: var(--black);
+  padding: 0.75rem 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  z-index: 2;
+}
+.tiktok-float svg { width: 14px; height: 14px; fill: var(--black); }
+.tiktok-float-text { display: flex; flex-direction: column; gap: 0.05rem; }
+.tiktok-handle { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; }
+.tiktok-label { font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.65; }
+
+/* ── SHARED SECTION ── */
+.section-wrap { padding: 6.5rem 3.5rem; }
+
+.section-eyebrow {
+  font-size: 0.63rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.section-eyebrow::before { content: ''; width: 22px; height: 1px; background: var(--accent); }
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--white);
+  margin-bottom: 0.65rem;
+}
+.section-title em {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--accent);
+  font-size: 0.85em;
+}
+
+.section-sub {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 460px;
+  font-weight: 300;
+}
+
+/* ── BRAND MARQUEE ── */
+.brands-section {
+  background: var(--dark);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.brands-header {
+  padding: 2.5rem 3.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.brands-header-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.brands-header-line { flex: 1; height: 1px; background: var(--border); }
+
+.marquee-outer {
+  overflow: hidden;
+  padding: 1.2rem 0 2.5rem;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 30s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.brand-logo-slot {
+  flex: 0 0 160px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  border-right: 1px solid var(--border);
+}
+
+.brand-logo-slot img {
+  max-width: 110px;
+  max-height: 44px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: opacity 0.3s, transform 0.3s;
+  display: block;
+}
+
+.brand-logo-slot:hover img {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.brand-logo-slot .slot-placeholder {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  color: var(--border);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── WORK / VIDEOS ── */
+.work-section { background: var(--black); }
+
+.tabs-wrap {
+  margin-top: 2.8rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  width: 100%;
+}
+.tab-btn {
+  flex: 1;
+  padding: 0.9rem 0.4rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.22s;
+  text-align: center;
+  white-space: nowrap;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn:hover { color: var(--white); background: var(--dark2); }
+.tab-btn.active { background: var(--accent); color: var(--black); }
+
+/* CAROUSEL */
+.carousel-outer { margin-top: 2.2rem; position: relative; }
+
+.carousel-track-wrap { overflow: hidden; cursor: grab; user-select: none; }
+.carousel-track-wrap:active { cursor: grabbing; }
+
+.carousel-track {
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+  padding-bottom: 0.5rem;
+}
+
+.video-card {
+  flex: 0 0 calc((100% - 2rem) / 3);
+  position: relative;
+  background: var(--dark2);
+  aspect-ratio: 9/16;
+  overflow: hidden;
+  cursor: pointer;
+}
+.video-card.hidden { display: none; }
+
+.video-card video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.video-card:hover video { transform: scale(1.04); }
+
+.video-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  color: var(--border);
+  border: 1px dashed var(--border);
+}
+.video-placeholder svg { width: 28px; height: 28px; opacity: 0.35; }
+.video-placeholder p { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; }
+
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13,13,13,0.9) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.4rem;
+  pointer-events: none;
+  z-index: 2;
+}
+.video-card:hover .video-overlay { opacity: 1; }
+
+/* Always show overlay on mobile */
+@media (hover: none) {
+  .video-overlay { opacity: 1; }
+  .play-btn { opacity: 1 !important; }
+}
+
+.video-brand { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.2rem; }
+.video-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.35rem; letter-spacing: 0.05em; color: var(--white); }
+
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 50px;
+  height: 50px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  cursor: pointer;
+  border: none;
+  z-index: 3;
+}
+.video-card:hover .play-btn { opacity: 1; }
+.play-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: var(--black);
+  margin-left: 0;
+}
+
+.pause-icon { display: none; }
+.play-btn.is-playing .play-icon { display: none; }
+.play-btn.is-playing .pause-icon { display: inline-flex; }
+.pause-icon svg rect { fill: var(--black); }
+
+/* CAROUSEL NAV */
+.carousel-nav {
+  display: flex; align-items: center; gap: 1rem;
+  margin-top: 1.8rem; justify-content: center;
+}
+.carousel-arrow {
+  width: 42px; height: 42px;
+  border: 1px solid var(--border); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.25s; color: var(--muted);
+}
+.carousel-arrow:hover { background: var(--accent); border-color: var(--accent); color: var(--black); }
+.carousel-arrow:disabled { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+.carousel-arrow svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.carousel-dots { display: flex; gap: 0.5rem; align-items: center; }
+.dot { width: 6px; height: 6px; background: var(--border); border-radius: 50%; transition: all 0.3s; cursor: pointer; }
+.dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+/* ── REVIEWS ── */
+.reviews-section { background: var(--dark); border-top: 1px solid var(--border); }
+
+.reviews-masonry {
+  columns: 3;
+  column-gap: 1.2rem;
+  margin-top: 3.5rem;
+}
+
+.review-card {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  padding: 1.8rem;
+  margin-bottom: 1.2rem;
+  break-inside: avoid;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.review-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+.review-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+
+.review-logo {
+  max-width: 88px;
+  max-height: 34px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  display: block;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.review-card:hover .review-logo { opacity: 1; transform: scale(1.03); }
+
+.review-logo-placeholder {
+  width: 80px; height: 30px;
+  border: 1px dashed var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.review-logo-placeholder span {
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--border);
+}
+
+.review-stars { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.06em; }
+
+.review-text {
+  font-size: 0.88rem;
+  line-height: 1.82;
+  color: #cac4be;
+  font-weight: 300;
+  margin-bottom: 1.4rem;
+  font-style: italic;
+}
+
+.review-author {
+  display: flex; align-items: center; gap: 0.75rem;
+  border-top: 1px solid var(--border); padding-top: 1.1rem;
+}
+.author-avatar {
+  width: 34px; height: 34px;
+  background: var(--dark3); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem;
+  color: var(--accent); flex-shrink: 0;
+}
+.author-name { font-size: 0.8rem; font-weight: 600; color: var(--white); }
+.author-role { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.1rem; }
+
+/* ── CONTACT ── */
+.contact-section {
+  background: var(--black);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+  border-top: 1px solid var(--border);
+}
+
+.contact-detail {
+  display: flex; flex-direction: column; gap: 0.3rem;
+  padding: 1.3rem 0; border-bottom: 1px solid var(--border);
+}
+.contact-detail:first-of-type { border-top: 1px solid var(--border); margin-top: 2.5rem; }
+.contact-detail-label { font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+.contact-detail-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem; letter-spacing: 0.06em; color: var(--white); }
+
+.form-group { margin-bottom: 1.1rem; }
+.form-group label {
+  display: block; font-size: 0.6rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; font-weight: 500;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%; padding: 0.85rem 1rem;
+  background: var(--dark2); border: 1px solid var(--border);
+  font-family: 'Inter', sans-serif; font-size: 0.86rem;
+  color: var(--white); outline: none;
+  transition: border-color 0.3s; appearance: none;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus { border-color: var(--accent); }
+.form-group select option { background: var(--dark2); }
+.form-group textarea { resize: none; height: 118px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.submit-btn {
+  width: 100%; padding: 1.05rem;
+  background: var(--accent); color: var(--black); border: none;
+  font-family: 'Inter', sans-serif; font-size: 0.7rem;
+  font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.3s, transform 0.2s; margin-top: 0.4rem;
+}
+.submit-btn:hover { background: var(--accent2); transform: translateY(-2px); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark); border-top: 1px solid var(--border);
+  padding: 1.8rem 3.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.68rem; letter-spacing: 0.12em;
+}
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--white); }
+.footer-logo span { color: var(--accent); }
+footer p { color: var(--muted); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: 1fr 320px; }
+}
+
+@media (max-width: 820px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+
+  /* HERO: stack vertically, photo first full-width */
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 68px 0 0;
+    min-height: auto;
+    gap: 0;
+  }
+
+  /* Photo goes on top */
+  .hero-right {
+    order: -1;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-photo-wrap {
+    width: 100%;
+    /* 4:5 portrait ratio so full face/body is visible */
+    height: 0;
+    padding-bottom: 125%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-photo-wrap img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  /* Remove bottom fade on mobile so photo is fully visible */
+  .hero-photo-wrap::after {
+    height: 20%;
+  }
+
+  .tiktok-float {
+    bottom: 1.2rem;
+    left: 1.5rem;
+  }
+
+  .hero-left {
+    padding: 2rem 1.5rem 3rem;
+    order: 1;
+  }
+
+  .section-wrap { padding: 4.5rem 1.5rem; }
+  .brands-header { padding: 2rem 1.5rem 1.2rem; }
+
+  /* Tabs scrollable */
+  .tabs-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 0 0 auto; padding: 0.85rem 1.2rem; }
+
+  /* ONE video per view on mobile */
+  .video-card {
+    flex: 0 0 calc(100vw - 3rem);
+    max-width: calc(100vw - 3rem);
+  }
+
+  .carousel-track { gap: 0.75rem; }
+
+  .reviews-masonry { columns: 1; }
+  .contact-section { grid-template-columns: 1fr; gap: 3rem; }
+  footer { flex-direction: column; gap: 0.8rem; padding: 2rem 1.5rem; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .hero-name { font-size: 3.8rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .reviews-masonry { columns: 1; }
+
+  /* Slightly narrower on very small phones, still single card */
+  .video-card {
+    flex: 0 0 calc(100vw - 3rem);
+    max-width: calc(100vw - 3rem);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">JAKA<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#intro">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="intro">
+  <div class="hero-left">
+    <p class="hero-eyebrow reveal">UGC Creator · United States</p>
+    <h1 class="hero-name reveal reveal-delay-1">
+      JAKA<br>
+      <span class="accent-line">Bernat</span>
+    </h1>
+    <p class="hero-bio reveal reveal-delay-2">
+      With 3+ years of experience in user-generated content, I create authentic, story-first videos that help brands connect, convert, and scale naturally.
+    </p>
+    <div class="hero-tags reveal reveal-delay-3">
+      <span class="hero-tag-chip">Cooking</span>
+      <span class="hero-tag-chip">Beauty</span>
+      <span class="hero-tag-chip">Tech</span>
+      <span class="hero-tag-chip">Fitness &amp; Health</span>
+      <span class="hero-tag-chip">Travel</span>
+      <span class="hero-tag-chip">Fashion</span>
+      <span class="hero-tag-chip">Couple Content</span>
+    </div>
+    <a href="#contact" class="hero-cta reveal reveal-delay-4">
+      Work With Me
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-photo-wrap">
+      <img src="images/profile.JPG" alt="Jaka Bernat">
+    </div>
+    <div class="tiktok-float">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.28 6.28 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.2 8.2 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+      <div class="tiktok-float-text">
+        <span class="tiktok-handle">@jaka.mov</span>
+        <span class="tiktok-label">TikTok UGC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BRAND LOGOS MARQUEE ── -->
+<div class="brands-section" id="brands">
+  <div class="brands-header reveal">
+    <span class="brands-header-label">Brands I've Worked With</span>
+    <div class="brands-header-line"></div>
+  </div>
+
+  <div class="marquee-outer">
+    <div class="marquee-track">
+      <!-- Set A -->
+      <div class="brand-logo-slot"><img src="images/logos/yums.png" alt="Universal Yums"></div>
+      <div class="brand-logo-slot"><img src="images/logos/weber.png" alt="Weber Grills"></div>
+      <div class="brand-logo-slot"><img src="images/logos/joint.svg" alt="Joint"></div>
+      <div class="brand-logo-slot"><img src="images/logos/mochi.png" alt="Mochi Health"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Shutterfly.jpeg" alt="Shutterfly"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Coofandy.jpeg" alt="Coofandy"></div>
+      <div class="brand-logo-slot"><img src="images/logos/everist.jpeg" alt="Everist"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Bogs.jpeg" alt="BOGS"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Ollie.jpeg" alt="Ollie"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Atom.png" alt="Atom"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Wrangler.jpeg" alt="Wrangler"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Onera.jpeg" alt="Onera"></div>
+      <div class="brand-logo-slot"><img src="images/logos/maelys.jpeg" alt="Maelys"></div>
+      <div class="brand-logo-slot"><img src="images/logos/UltraViolette.jpeg" alt="Ultra Violette"></div>
+      <div class="brand-logo-slot"><img src="images/logos/AtomFresh.jpeg" alt="Atom Fresh"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Kinders.jpg" alt="Kinder's"></div>
+      <!-- Set B (duplicate for seamless loop) -->
+      <div class="brand-logo-slot"><img src="images/logos/yums.png" alt="Universal Yums"></div>
+      <div class="brand-logo-slot"><img src="images/logos/weber.png" alt="Weber Grills"></div>
+      <div class="brand-logo-slot"><img src="images/logos/joint.svg" alt="Joint"></div>
+      <div class="brand-logo-slot"><img src="images/logos/mochi.png" alt="Mochi Health"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Shutterfly.jpeg" alt="Shutterfly"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Coofandy.jpeg" alt="Coofandy"></div>
+      <div class="brand-logo-slot"><img src="images/logos/everist.jpeg" alt="Everist"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Bogs.jpeg" alt="BOGS"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Ollie.jpeg" alt="Ollie"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Atom.png" alt="Atom"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Wrangler.jpeg" alt="Wrangler"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Onera.jpeg" alt="Onera"></div>
+      <div class="brand-logo-slot"><img src="images/logos/maelys.jpeg" alt="Maelys"></div>
+      <div class="brand-logo-slot"><img src="images/logos/UltraViolette.jpeg" alt="Ultra Violette"></div>
+      <div class="brand-logo-slot"><img src="images/logos/AtomFresh.jpeg" alt="Atom Fresh"></div>
+      <div class="brand-logo-slot"><img src="images/logos/Kinders.jpg" alt="Kinder's"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WORK / VIDEOS ── -->
+<section class="section-wrap work-section" id="work">
+  <p class="section-eyebrow reveal">Portfolio</p>
+  <h2 class="section-title reveal reveal-delay-1">Past <em>Work</em></h2>
+  <p class="section-sub reveal reveal-delay-2">Content created for brand campaigns. Filter by category and swipe through.</p>
+
+  <div class="tabs-wrap reveal reveal-delay-3">
+  <button class="tab-btn active" data-category="all">All</button>
+  <button class="tab-btn" data-category="fitness-health">Health</button>
+  <button class="tab-btn" data-category="beauty">Beauty</button>
+  <button class="tab-btn" data-category="tech">Tech</button>
+  <button class="tab-btn" data-category="cooking">Cooking</button>
+  <button class="tab-btn" data-category="travel">Travel</button>
+  <button class="tab-btn" data-category="fashion">Fashion</button>
+  <button class="tab-btn" data-category="couple-content">Couple Content</button>
+</div>
+
+  <div class="carousel-outer">
+    <div class="carousel-track-wrap" id="carouselWrap">
+      <div class="carousel-track" id="carouselTrack">
+
+        <div class="video-card" data-category="fitness-health">
+    <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772948965/0304_k7zwqx.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772948965/0304_k7zwqx.jpg" playsinline webkit-playsinline preload="metadata"></video>
+    <button type="button" class="play-btn" aria-label="Play video">
+      <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+      <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+    </button>
+    <div class="video-overlay"><p class="video-brand">Joint</p><p class="video-title">Fitness &amp; Health Campaign</p></div>
+  </div>
+
+  <div class="video-card" data-category="beauty">
+    <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951740/Jaka_suncreen_ugc_wwc1g8.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951740/Jaka_suncreen_ugc_wwc1g8.jpg" playsinline webkit-playsinline preload="metadata"></video>
+    <button type="button" class="play-btn">
+      <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+      <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+    </button>
+    <div class="video-overlay"><p class="video-brand">Ultra Violette</p><p class="video-title">Beauty Campaign</p></div>
+  </div>
+
+  <div class="video-card" data-category="tech">
+    <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772950708/copy_3E00E83F-1082-4343-860B-22E023A772A0_2_qshwb8.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950708/copy_3E00E83F-1082-4343-860B-22E023A772A0_2_qshwb8.jpg" playsinline webkit-playsinline preload="metadata"></video>
+    <button type="button" class="play-btn" aria-label="Play video">
+      <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+      <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+    </button>
+    <div class="video-overlay"><p class="video-brand">Glowright</p><p class="video-title">Tech Campaign</p></div>
+  </div>
+
+
+        <div class="video-card" data-category="tech">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772947551/ShouttFinal_tsrpyv.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772947551/ShouttFinal_tsrpyv.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Shoutt</p><p class="video-title">Tech Campaign</p></div>
+        </div>
+
+       
+
+        <div class="video-card" data-category="fitness-health">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772949569/Mochi1_2_ptflc5.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772949569/Mochi1_2_ptflc5.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Mochi</p><p class="video-title">Health Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="fitness-health">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772949526/0301_s5bivy.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_2/v1772949569/Mochi1_2_ptflc5.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Mochi 2</p><p class="video-title">Health Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="tech">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772949874/Ring1_q7rfrr.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772949874/Ring1_q7rfrr.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Find My Phone</p><p class="video-title">Tech Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772949925/Ring2_djtbr6.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772949925/Ring2_djtbr6.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Find My Phone</p><p class="video-title">Couple Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="fashion">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772950069/Coofandy_Revision_fglfcv.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950069/Coofandy_Revision_fglfcv.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Coofandy</p><p class="video-title">Fashion Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="fashion">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772950413/BOGS_Sound_closba.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950413/BOGS_Sound_closba.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">BOGS</p><p class="video-title">Fashion Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="fashion">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772950647/copy_B0A4A410-0377-4C7A-918D-ED840ACB5F65_qcovfk.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950647/copy_B0A4A410-0377-4C7A-918D-ED840ACB5F65_qcovfk.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Wrangler</p><p class="video-title">Fashion Campaign</p></div>
+        </div>
+
+        
+
+        <div class="video-card" data-category="cooking">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772950803/copy_FFA54BB4-7BBC-47A5-ADE7-B253A750517B_nyllcw.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950803/copy_FFA54BB4-7BBC-47A5-ADE7-B253A750517B_nyllcw.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Kinder's</p><p class="video-title">Cooking Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="beauty">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772950961/Jaka_Brio_Content_V1_SensitivityStory_re0b1o.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772950961/Jaka_Brio_Content_V1_SensitivityStory_re0b1o.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Brio</p><p class="video-title">Beauty Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="beauty">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772946550/0203_1_onsnu3.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772946550/0203_1_onsnu3.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Everist</p><p class="video-title">Beauty Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="travel">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951088/cabin_coupleUGC_izheon.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951088/cabin_coupleUGC_izheon.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Cabin</p><p class="video-title">Travel Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="travel">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951124/frenchieugc_f1wtty.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951124/frenchieugc_f1wtty.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Frenchie Hotel</p><p class="video-title">Travel Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="travel">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951131/onera2ugc_evotmz.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951131/onera2ugc_evotmz.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Onera</p><p class="video-title">Travel Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="travel">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951161/oneraugc_r3vlim.mov" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951161/oneraugc_r3vlim.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn" aria-label="Play video">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Onera</p><p class="video-title">Travel Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951327/US_BASED_-_Couple_Taste_Test_ice5oh.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951327/US_BASED_-_Couple_Taste_Test_ice5oh.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Universal Yums</p><p class="video-title">Couple Taste Test</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951425/shutterfly1_narz9e.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951425/shutterfly1_narz9e.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Shutterfly</p><p class="video-title">Couple Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951479/couple_cantina_q6jtbq.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951479/couple_cantina_q6jtbq.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Cantina</p><p class="video-title">Couple Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951548/atom_fresh_jpwzrt.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951548/atom_fresh_jpwzrt.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Atom Fresh</p><p class="video-title">Couple Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951290/couple_winetasting_s3e6oi.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951290/couple_winetasting_s3e6oi.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Wine Tasting</p><p class="video-title">Couple Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="couple-content">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/f_mp4,q_auto/v1772951272/couple_winery_ol9c5v.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951272/couple_winery_ol9c5v.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Wine Tasting</p><p class="video-title">Couple Content</p></div>
+        </div>
+
+        <div class="video-card" data-category="beauty">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951740/Jaka_suncreen_ugc_wwc1g8.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951740/Jaka_suncreen_ugc_wwc1g8.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Ultra Violette</p><p class="video-title">Beauty Campaign</p></div>
+        </div>
+
+        <div class="video-card" data-category="cooking">
+          <video src="https://res.cloudinary.com/dmddqabrf/video/upload/v1772951749/Jaka_weber_ugc_qagrrv.mp4" poster="https://res.cloudinary.com/dmddqabrf/video/upload/so_1/v1772951749/Jaka_weber_ugc_qagrrv.jpg" playsinline webkit-playsinline preload="metadata"></video>
+          <button type="button" class="play-btn">
+            <span class="play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg></span>
+            <span class="pause-icon"><svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg></span>
+          </button>
+          <div class="video-overlay"><p class="video-brand">Weber</p><p class="video-title">Cooking Campaign</p></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="carousel-nav">
+      <button class="carousel-arrow" id="prevBtn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-arrow" id="nextBtn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── REVIEWS ── -->
+<section class="section-wrap reviews-section" id="reviews">
+  <p class="section-eyebrow reveal">Testimonials</p>
+  <h2 class="section-title reveal reveal-delay-1">What Brands <em>Say</em></h2>
+  <p class="section-sub reveal reveal-delay-2">Real feedback from real partners.</p>
+
+  <div class="reviews-masonry">
+
+    <div class="review-card reveal">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/yums.png" alt="Universal Yums">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"Maya and her fiancé did an amazing job showcasing our snack boxes. The video felt fun, authentic, and really captured the experience we wanted to highlight. Loved working with them and would 100% collaborate again."</p>
+      <div class="review-author">
+        <div class="author-avatar">U</div>
+        <div>
+          <p class="author-name">Universal Yums Team</p>
+          <p class="author-role">Brand Partnerships</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card reveal reveal-delay-1">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/joint.svg" alt="The Joint">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"This is amazing. Exactly what we were looking for 🙌"</p>
+      <div class="review-author">
+        <div class="author-avatar">J</div>
+        <div>
+          <p class="author-name">The Joint Team</p>
+          <p class="author-role">Marketing</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card reveal reveal-delay-2">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/Shutterfly.jpeg" alt="Shutterfly">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"Jaka created beautiful lifestyle content that felt natural, warm, and genuinely on-brand. The final deliverables were polished, engaging, and easy for our team to use across campaign placements."</p>
+      <div class="review-author">
+        <div class="author-avatar">S</div>
+        <div>
+          <p class="author-name">Shutterfly Team</p>
+          <p class="author-role">Brand Marketing</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card reveal reveal-delay-1">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/mochi.png" alt="Mochi Health">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"Great communication, strong hooks, and authentic delivery. The content was clear, relatable, and aligned really well with the messaging we wanted to put in front of our audience."</p>
+      <div class="review-author">
+        <div class="author-avatar">M</div>
+        <div>
+          <p class="author-name">Mochi Health Team</p>
+          <p class="author-role">Marketing Team</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card reveal reveal-delay-2">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/weber.png" alt="Weber">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"Jaka delivered engaging content that showcased the product in a very natural way. The video felt authentic, easy to watch, and matched the tone we were aiming for."</p>
+      <div class="review-author">
+        <div class="author-avatar">W</div>
+        <div>
+          <p class="author-name">Weber Team</p>
+          <p class="author-role">Brand Marketing</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card reveal reveal-delay-3">
+      <div class="review-card-top">
+        <img class="review-logo" src="images/logos/Wrangler.jpeg" alt="Wrangler">
+        <span class="review-stars">★★★★★</span>
+      </div>
+      <p class="review-text">"Professional, creative, and easy to work with. Jaka understood the visual direction quickly and delivered content that felt polished while still keeping it authentic."</p>
+      <div class="review-author">
+        <div class="author-avatar">W</div>
+        <div>
+          <p class="author-name">Wrangler Team</p>
+          <p class="author-role">Brand Partnerships</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="section-wrap contact-section" id="contact">
+  <div>
+    <p class="section-eyebrow reveal">Get In Touch</p>
+    <h2 class="section-title reveal reveal-delay-1">Let's <em>Collaborate</em></h2>
+    <p class="section-sub reveal reveal-delay-2">Interested in working together? Fill out the form or reach out directly.</p>
+    <div class="contact-detail reveal reveal-delay-3">
+      <span class="contact-detail-label">Email</span>
+      <span class="contact-detail-value">mayaandjaka@gmail.com</span>
+    </div>
+    <div class="contact-detail reveal reveal-delay-3">
+      <span class="contact-detail-label">TikTok</span>
+      <span class="contact-detail-value">@jaka.mov</span>
+    </div>
+    <div class="contact-detail reveal reveal-delay-4">
+      <span class="contact-detail-label">Response Time</span>
+      <span class="contact-detail-value">Within 24 Hours</span>
+    </div>
+    <div class="contact-detail reveal reveal-delay-4">
+      <span class="contact-detail-label">Location</span>
+      <span class="contact-detail-value">San Antonio, Texas, United States</span>
+    </div>
+  </div>
+<form action="https://formspree.io/f/xbdzddro" method="POST" class="reveal reveal-delay-2">
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" name="name" placeholder="Jane Smith" required>
+    </div>
+
+    <div class="form-group">
+      <label>Brand / Company</label>
+      <input type="text" name="company" placeholder="Brand Name">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" name="email" placeholder="hello@brand.com" required>
+  </div>
+
+  <div class="form-group">
+    <label>Campaign Type</label>
+    <select name="campaign">
+      <option value="" disabled selected>Select a type</option>
+      <option>UGC Video Ad</option>
+      <option>Product Review</option>
+      <option>Tutorial / How-To</option>
+      <option>Unboxing</option>
+      <option>Long-Term Partnership</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Tell Me About Your Campaign</label>
+    <textarea name="message" placeholder="Share details about your brand, product, and what you're looking for..." required></textarea>
+  </div>
+
+  <button class="submit-btn">Send Inquiry →</button>
+
+</form>
+</section>
+<!-- ── FOOTER ── -->
+<footer>
+  <span class="footer-logo">JAKA<span>.</span></span>
+  <p>© 2026 · UGC Creator</p>
+  <p>United States</p>
+</footer>
+
+<script>
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── CAROUSEL ──
+const track = document.getElementById('carouselTrack');
+const wrap  = document.getElementById('carouselWrap');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsContainer = document.getElementById('carouselDots');
+let currentIndex = 0;
+
+function isMobile() { return window.innerWidth <= 820; }
+
+function getCardsPerView() {
+  if (window.innerWidth <= 820) return 1;
+  return 3;
+}
+
+function getVisibleCards() {
+  return [...track.querySelectorAll('.video-card:not(.hidden)')];
+}
+
+function getCardWidth() {
+  const c = getVisibleCards();
+  if (!c.length) return 0;
+  const gap = isMobile() ? 12 : 16;
+  return c[0].getBoundingClientRect().width + gap;
+}
+
+function buildDots() {
+  dotsContainer.innerHTML = '';
+  const cpv = getCardsPerView();
+  const total = Math.ceil(getVisibleCards().length / cpv);
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goToPage(i));
+    dotsContainer.appendChild(d);
+  }
+}
+
+function updateUI() {
+  const cpv = getCardsPerView();
+  const visible = getVisibleCards();
+  const page = Math.floor(currentIndex / cpv);
+  [...dotsContainer.children].forEach((d, i) => d.classList.toggle('active', i === page));
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex >= visible.length - cpv;
+}
+
+function goToPage(page) {
+  const cpv = getCardsPerView();
+  currentIndex = Math.min(page * cpv, Math.max(0, getVisibleCards().length - cpv));
+  track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+  updateUI();
+}
+
+function next() {
+  const cpv = getCardsPerView();
+  const visible = getVisibleCards();
+  if (currentIndex < visible.length - cpv) {
+    currentIndex = Math.min(currentIndex + cpv, visible.length - cpv);
+    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+    updateUI();
+  }
+}
+
+function prev() {
+  const cpv = getCardsPerView();
+  if (currentIndex > 0) {
+    currentIndex = Math.max(currentIndex - cpv, 0);
+    track.style.transform = `translateX(-${currentIndex * getCardWidth()}px)`;
+    updateUI();
+  }
+}
+
+prevBtn.addEventListener('click', prev);
+nextBtn.addEventListener('click', next);
+
+// Drag / swipe
+let isDragging = false, startX = 0;
+wrap.addEventListener('mousedown', e => { isDragging = true; startX = e.pageX; });
+wrap.addEventListener('mouseleave', () => isDragging = false);
+wrap.addEventListener('mouseup', e => {
+  if (!isDragging) return; isDragging = false;
+  const diff = e.pageX - startX;
+  if (Math.abs(diff) > 50) diff < 0 ? next() : prev();
+});
+
+let touchStartX = 0;
+wrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+wrap.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(diff) > 40) diff < 0 ? next() : prev();
+});
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.category;
+    [...track.querySelectorAll('.video-card')].forEach(card => {
+      card.classList.toggle('hidden', cat !== 'all' && card.dataset.category !== cat);
+    });
+    currentIndex = 0;
+    track.style.transform = 'translateX(0)';
+    buildDots(); updateUI();
+  });
+});
+
+function init() {
+  currentIndex = 0;
+  track.style.transform = 'translateX(0)';
+  buildDots(); updateUI();
+}
+init();
+window.addEventListener('resize', init);
+
+// Play / pause
+document.querySelectorAll('.play-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const card = btn.closest('.video-card');
+    const video = card.querySelector('video');
+    if (!video) return;
+    if (video.paused) {
+      video.play().then(() => {
+        btn.classList.add('is-playing');
+      }).catch(err => console.log('Play failed:', err));
+    } else {
+      video.pause();
+      btn.classList.remove('is-playing');
+    }
+  });
+});
+
+document.querySelectorAll('.video-card video').forEach(video => {
+  video.addEventListener('ended', () => {
+    const btn = video.closest('.video-card').querySelector('.play-btn');
+    if (btn) btn.classList.remove('is-playing');
+  });
+});
+</script>
+</body>
+</html>
